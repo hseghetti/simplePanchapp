@@ -1,11 +1,12 @@
 import React from 'react'
-import { AppRegistry,View, Picker, Alert } from 'react-native'
+import { AppRegistry,View, Picker, Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 
 import { actionCreators } from './panchosListRedux'
 import List from './List'
 import Input from './Input'
 import Title from './Title'
+import MenuPopup from './MenuPopup'
 
 export default class Container extends React.Component {
 
@@ -59,9 +60,12 @@ export default class Container extends React.Component {
   
     return (
       <View>
-        <Title>
-          Pancho List... Lets pay
-        </Title>
+        <View style={styles.topBar}>
+          <MenuPopup />
+          <Title>
+            Pancho List... Lets pay
+          </Title>
+        </View>
         <Picker 
           onValueChange={this.onPickerChange.bind(this)}
           selectedValue={this.state.panchado}>
@@ -82,4 +86,11 @@ export default class Container extends React.Component {
     this.setState({panchado: itemValue})
   }
 }
+
+const styles = StyleSheet.create({
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  }
+})
 
