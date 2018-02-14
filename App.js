@@ -4,6 +4,7 @@ import { createStore } from 'redux'
 import * as firebase from 'firebase'
 import { reducer } from './panchosListRedux'
 import Container from './Container'
+import LoginForm from './LoginForm'
 import _ from 'lodash'
 
 const store = createStore(reducer)
@@ -24,15 +25,16 @@ export default class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            panchos: []
+            panchos: [],
+            loggedIn: false,
+            users: []
         };
 
         this.panchosRef = firebaseApp.database().ref('/panchos/')
+        this.usersRef = firebaseApp.database().ref('/users/')
     }
 
     componentWillMount () {
-        // this.initialDataBaseLoad(this.panchosRef)
-        // this.listenForPanchoRemoved(this.panchosRef)
         this.listenForPanchodAdded(this.panchosRef)
     }
 
@@ -42,38 +44,31 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <Container 
-                store={store} 
-                panchos={this.state.panchos} 
-                removeFromFirebase={this.removeFromFirebase.bind(this)}
-                addToFirebase={this.addToFirebase.bind(this)}
-            />
+            <View>
+                {this.state.loggedIn ? this.renderAppContainer() : this.renderLoginForm()}        
+            </View>
         )
     }
 
-    initialDataBaseLoad = (panchosRef) => {
-        let items = []
-        var that = this;
-        
-        panchosRef.once('value').then(function (dataSnapshot) {
-            dataSnapshot.forEach((child) => {      
-                items.push({
-                date: child.val().date,
-                panchado: child.val().panchado,
-                reason: child.val().reason,
-                _key: child.key
-                })
-            })
+    renderAppContainer = () => {
+        console.log('users in the state ', this.state.users)
+        return (
+            <Container 
+                store={store} 
+                panchos={this.state.panchos}
+                users={this.state.users} 
+                removeFromFirebase={this.removeFromFirebase.bind(this)}
+                addToFirebase={this.addToFirebase.bind(this)}
+            />
+        );
+    }
 
-            console.log(items)
-            that.setState({
-                panchos: items
-            })
-        })
+    renderLoginForm = () => {
+        return <LoginForm onLoggedIn={this.onLoggedIn.bind(this)} />;
     }
 
     listenForPanchodAdded = (panchosRef) => {
-        panchosRef.on('value', (dataSnapshot) => { // child_added
+        panchosRef.orderByKey().on('value', (dataSnapshot) => {
             let items = []
 
             dataSnapshot.forEach((child) => {      
@@ -85,22 +80,10 @@ export default class App extends React.Component {
                 })
             })
 
-            console.log(items)
             this.setState({
                 panchos: items
             })
         })
-    }
-
-    listenForPanchoRemoved = (panchosRef) => {
-        panchosRef.on('child_removed', (oldChildSnapshot) => { 
-            let panchos = _.cloneDeep(this.state.panchos)
-            panchos = _.filter(panchos, (pancho) => {return pancho._key !== oldChildSnapshot.key})
-
-            this.setState({
-                panchos: panchos
-            })
-        })  
     }
 
     removeFromFirebase = (key) => {
@@ -109,6 +92,44 @@ export default class App extends React.Component {
 
     addToFirebase = (pancho) => {
         this.panchosRef.push(pancho)
+    }
+
+    onLoggedIn = () => {
+        const user = firebase.auth().currentUser;
+
+        this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
+            if (!snapshot.val()) {
+                this.usersRef.push({email: user.email}, (error) => {
+                    if (error) {
+                        console.log('user push failed ', error);
+                    } else {
+                        this.setUsersList()
+                    }
+                })
+            } else {
+                this.setUsersList()
+            }
+        }.bind(this));
+        //console.log('current user ', user)
+    }
+
+    setUsersList = () => {
+        this.usersRef.orderByChild('email').on("value", function(dataSnapshot) {
+            let items = [];
+            
+            dataSnapshot.forEach((child) => {      
+                items.push({
+                    email: child.val().email,
+                    name: child.val().email,
+                    _key: child.key
+                })
+            })
+            
+            this.setState({
+                loggedIn: true,
+                users: items
+            })
+        }.bind(this));        
     }
 }
 

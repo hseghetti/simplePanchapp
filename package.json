@@ -23,6 +23,7 @@
     "firebase": "^4.9.1",
     "moment": "^2.20.1",
     "react": "16.2.0",
-    "react-native": "0.52.0"
+    "react-native": "0.52.0",
+    "react-native-material-menu": "^0.2.5"
   }
 }

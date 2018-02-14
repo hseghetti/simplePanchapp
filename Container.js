@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppRegistry,View, Picker } from 'react-native'
+import { AppRegistry,View, Picker, Alert } from 'react-native'
 import moment from 'moment'
 
 import { actionCreators } from './panchosListRedux'
@@ -10,21 +10,13 @@ import Title from './Title'
 export default class Container extends React.Component {
 
   state = {
-    panchado: 'Ivana' // TODO: Add Placeholder 
+    panchado: 'panchedPlaceholder'
   }
 
   componentWillMount() {
-    const {store} = this.props
-    const {panchos} = this.props // Data coming from firebase
+    const {panchos} = this.props
 
-    // const {panchos} = store.getState()  // Data coming from the store redux
-  
     this.setState({panchos})
-
-    // this.unsubscribe = store.subscribe(() => {
-    //   const {panchos} = store.getState()
-    //   this.setState({panchos})
-    // })
   }
 
   componentWillReceiveProps (props) {
@@ -38,25 +30,27 @@ export default class Container extends React.Component {
   }
 
   onAddPancho = (reason) => {
-    // USING STORES REDUX
-    // const {store} = this.props
     const {panchado} = this.state
 
-    // store.dispatch(actionCreators.add({panchado: panchado, reason: reason, date: moment().toString()}))
-
-    this.props.addToFirebase({
-      panchado: panchado,
-      reason: reason,
-      date: moment().toString()
-    })
+    if (panchado && panchado !== 'panchedPlaceholder') {
+      this.props.addToFirebase({
+        panchado: panchado,
+        reason: reason,
+        date: moment().toString()
+      })
+    } else {
+      Alert.alert(
+        'Please select an email',
+        'You must select the victim of the Pancho before submit',
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   onRemovePancho = (index) => {
-    // Using Store Reflux
-    // const {store} = this.props
-    // store.dispatch(actionCreators.remove(index))
-
-    // Using remove from firebase
     this.props.removeFromFirebase(index._key) 
   }
 
@@ -71,14 +65,17 @@ export default class Container extends React.Component {
         <Picker 
           onValueChange={this.onPickerChange.bind(this)}
           selectedValue={this.state.panchado}>
-          <Picker.Item label="Ivana" value="Ivana" />
-          <Picker.Item label="Emma" value="Emma" />
-          <Picker.Item label="Mema" value="Mema" />
+          <Picker.Item label="Who was Panched?" value="panchedPlaceholder" />
+          {this.props.users.map(this.renderPickerItem)}
         </Picker>
         <Input placeholder={'Reason'} onSubmitEditing={this.onAddPancho.bind(this)} />
         <List list={panchos} onPressItem={this.onRemovePancho} />
       </View>
     )
+  }
+
+  renderPickerItem = (item, index) => {
+    return <Picker.Item label={item.email} value={item.email} key={index} />
   }
 
   onPickerChange = (itemValue, itemIndex) => {
