@@ -9,20 +9,13 @@ export default class MenuPopup extends React.PureComponent {
  
   menu = null;
  
-  hideMenu = () => {
-    this.menu.hide();
-  };
- 
-  showMenu = () => {
-    this.menu.show();
-  };
- 
   render() {
     return (
         <Menu
           ref={this.setMenuRef}
           button={<Text style={styles.menu} onPress={this.showMenu}>MENU</Text>}
         >
+          <MenuItem onPress={this.onProfileClick} disabled>Profile</MenuItem>
           <MenuItem onPress={this.hideMenu} disabled>New Group</MenuItem>
           <MenuItem onPress={this.hideMenu} disabled>Reports</MenuItem>
           <MenuItem onPress={this.hideMenu} disabled>Logs</MenuItem>
@@ -30,6 +23,19 @@ export default class MenuPopup extends React.PureComponent {
           <MenuItem onPress={this.hideMenu}>Logout</MenuItem>
         </Menu>
     );
+  }
+
+  hideMenu = () => {
+    this.menu.hide();
+  };
+
+  showMenu = () => {
+    this.menu.show();
+  };
+
+  onProfileClick = () => {
+    this.props.onMenuAction('profile');
+    this.hideMenu();
   }
 }
 

@@ -51,12 +51,12 @@ export default class App extends React.Component {
     }
 
     renderAppContainer = () => {
-        console.log('users in the state ', this.state.users)
         return (
             <Container 
                 store={store} 
                 panchos={this.state.panchos}
-                users={this.state.users} 
+                users={this.state.users}
+                userData={this.state.userData}
                 removeFromFirebase={this.removeFromFirebase.bind(this)}
                 addToFirebase={this.addToFirebase.bind(this)}
             />
@@ -96,24 +96,25 @@ export default class App extends React.Component {
 
     onLoggedIn = () => {
         const user = firebase.auth().currentUser;
+        let newUserRef;
 
         this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
             if (!snapshot.val()) {
-                this.usersRef.push({email: user.email}, (error) => {
+                newUserRef = this.usersRef.push({email: user.email}, (error) => {
                     if (error) {
                         console.log('user push failed ', error);
                     } else {
-                        this.setUsersList()
+                        this.setUsersList(newUserRef)
                     }
                 })
             } else {
-                this.setUsersList()
+                this.setUsersList(snapshot)
             }
         }.bind(this));
         //console.log('current user ', user)
     }
 
-    setUsersList = () => {
+    setUsersList = (userData) => {
         this.usersRef.orderByChild('email').on("value", function(dataSnapshot) {
             let items = [];
             
@@ -124,10 +125,12 @@ export default class App extends React.Component {
                     _key: child.key
                 })
             })
-            
+            console.log('userData')
+        console.log(userData)
             this.setState({
                 loggedIn: true,
-                users: items
+                users: items,
+                userData: userData
             })
         }.bind(this));        
     }
