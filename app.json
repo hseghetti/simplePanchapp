@@ -1,5 +1,15 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+    "sdkVersion": "25.0.0",
+    "name": "Panchapp",
+    "icon": "./assets/icon.png",
+    "version": "0.0.1",
+    "slug": "Panchapp",
+    "ios": {
+      "bundleIdentifier": "com.memax.panchapp"
+    },
+    "android": {
+      "package": "com.memax.panchapp"
+    }
   }
 }
