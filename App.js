@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppRegistry, View } from 'react-native'
+import { AppRegistry, View, StyleSheet, StatusBar } from 'react-native'
 import { createStore } from 'redux'
 import * as firebase from 'firebase'
 import { reducer } from './panchosListRedux'
@@ -38,6 +38,10 @@ export default class App extends React.Component {
         this.listenForPanchodAdded(this.panchosRef)
     }
 
+    componentDidMount() {
+        StatusBar.setHidden(true);
+    }
+
     componentWillUnmount () {
         this.panchosRef.off()
     }
@@ -59,6 +63,7 @@ export default class App extends React.Component {
                 userData={this.state.userData}
                 removeFromFirebase={this.removeFromFirebase.bind(this)}
                 addToFirebase={this.addToFirebase.bind(this)}
+                onUserLogout={this.onUserLogout.bind(this)}
             />
         );
     }
@@ -80,9 +85,12 @@ export default class App extends React.Component {
                 })
             })
 
-            this.setState({
-                panchos: items
-            })
+            // this setTimeout is needed because in prod there is a issue trying to get the panchos
+            setTimeout(function () {
+                this.setState({
+                    panchos: items
+                })
+            }.bind(this), 0)
         })
     }
 
@@ -125,8 +133,7 @@ export default class App extends React.Component {
                     _key: child.key
                 })
             })
-            console.log('userData')
-        console.log(userData)
+            
             this.setState({
                 loggedIn: true,
                 users: items,
@@ -134,6 +141,21 @@ export default class App extends React.Component {
             })
         }.bind(this));        
     }
+
+    onUserLogout = () => {
+        firebase.auth().signOut();
+        this.setState({
+            loggedIn: false,
+            users: [],
+            userData: {}
+        })
+    }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 15
+    }
+})
 
 AppRegistry.registerComponent('SimplePanchapp', () => App)

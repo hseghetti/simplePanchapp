@@ -20,7 +20,7 @@ export default class MenuPopup extends React.PureComponent {
           <MenuItem onPress={this.hideMenu} disabled>Reports</MenuItem>
           <MenuItem onPress={this.hideMenu} disabled>Logs</MenuItem>
           <MenuDivider />
-          <MenuItem onPress={this.hideMenu}>Logout</MenuItem>
+          <MenuItem onPress={this.onUserLogout}>Logout</MenuItem>
         </Menu>
     );
   }
@@ -36,6 +36,11 @@ export default class MenuPopup extends React.PureComponent {
   onProfileClick = () => {
     this.props.onMenuAction('profile');
     this.hideMenu();
+  }
+
+  onUserLogout = () => {
+    this.props.onUserLogout();
+    this.hideMenu()
   }
 }
 

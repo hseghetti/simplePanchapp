@@ -32,10 +32,6 @@ export default class Container extends React.Component {
     this.setState({panchos})
   }
 
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-
   onAddPancho = (reason) => {
     const {panchado} = this.state
 
@@ -111,7 +107,8 @@ export default class Container extends React.Component {
 
   getMenuProps = () => {
     return {
-      onMenuAction: this.onMenuAction.bind(this)
+      onMenuAction: this.onMenuAction.bind(this),
+      onUserLogout: this.props.onUserLogout
     }
   }
 
