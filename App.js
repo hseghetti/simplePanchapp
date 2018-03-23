@@ -22,6 +22,8 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
 
+    panchos = {}
+
     constructor(props) {
         super(props)
         this.state = {
@@ -34,11 +36,8 @@ export default class App extends React.Component {
         this.usersRef = firebaseApp.database().ref('/users/')
     }
 
-    componentWillMount () {
-        this.listenForPanchodAdded(this.panchosRef)
-    }
-
     componentDidMount() {
+        this.listenForPanchodAdded(this.panchosRef)
         StatusBar.setHidden(true);
     }
 
@@ -58,7 +57,7 @@ export default class App extends React.Component {
         return (
             <Container 
                 store={store} 
-                panchos={this.state.panchos}
+                panchos={this.getPanchos()}
                 users={this.state.users}
                 userData={this.state.userData}
                 removeFromFirebase={this.removeFromFirebase.bind(this)}
@@ -92,6 +91,18 @@ export default class App extends React.Component {
                 })
             }.bind(this), 0)
         })
+    }
+
+    getPanchos = () => {
+        let panchos = {};
+
+        if (_.isEmpty(this.state.panchos)) {
+            this.listenForPanchodAdded(this.panchosRef);
+        } else {
+           panchos = this.state.panchos 
+        }
+
+        return panchos;
     }
 
     removeFromFirebase = (key) => {

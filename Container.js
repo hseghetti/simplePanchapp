@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppRegistry,View, Picker, Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
+import _ from 'lodash'
 
 import { actionCreators } from './panchosListRedux'
 import List from './List'
@@ -13,10 +14,11 @@ export default class Container extends React.Component {
 
   state = {
     panchado: 'panchedPlaceholder',
-    view: 'panchos'
+    view: 'panchos',
+    panchos: {}
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {panchos} = this.props
     const {userData} = this.props
 
@@ -29,7 +31,7 @@ export default class Container extends React.Component {
   componentWillReceiveProps (props) {
     const {panchos} = props
   
-    this.setState({panchos})
+    this.setState({panchos: panchos})
   }
 
   onAddPancho = (reason) => {
@@ -54,7 +56,21 @@ export default class Container extends React.Component {
   }
 
   onRemovePancho = (index) => {
-    this.props.removeFromFirebase(index._key) 
+    Alert.alert(
+      'Are you sure?',
+      'Do you want to delete the pancho?',
+      [
+        {text: 'NO', onPress: () => console.log('NO Pressed')},
+        {text: 'YES', onPress: function (index) {
+          this.removePancho(index);
+        }.bind(this, index)}
+      ],
+      { cancelable: false }
+    );
+  }
+
+  removePancho = (index) => {
+    this.props.removeFromFirebase(index._key);    
   }
 
   render() {
@@ -77,7 +93,6 @@ export default class Container extends React.Component {
   }
 
   renderPanchoView = () => {
-    const {panchos} = this.state
 
     return (
       <View>
@@ -88,9 +103,20 @@ export default class Container extends React.Component {
           {this.props.users.map(this.renderPickerItem)}
         </Picker>
         <Input placeholder={'Reason'} onSubmitEditing={this.onAddPancho.bind(this)} />
-        <List list={panchos} onPressItem={this.onRemovePancho} />
+        {this.renderPanchoList()}
       </View>
     );
+  }
+
+  renderPanchoList = () => {
+    let dataToRender = null;
+    const {panchos} = this.state
+
+    if (!_.isEmpty(panchos)) {
+        dataToRender = (<List list={panchos} onPressItem={this.onRemovePancho} />);
+    }
+
+    return dataToRender;
   }
 
   renderProfileView = () => {

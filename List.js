@@ -13,7 +13,7 @@ export default class List extends Component {
                 style={styles.item}
                 onPress={() => onPressItem(this.props.list[i])} > 
                 <Text style={styles.panched}>{'Panched: ' + item.panchado}</Text>
-                <Text>{'Reason: '+ item.panchado}</Text>
+                <Text>{'Reason: '+ item.reason}</Text>
                 <Text>{'Date: ' + item.date}</Text>
             </TouchableOpacity>
         )
@@ -32,7 +32,7 @@ export default class List extends Component {
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: 'whitesmoke',
+        backgroundColor: '#eae8e8',
         marginBottom: 5,
         padding: 15
     },
