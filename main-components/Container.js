@@ -3,10 +3,9 @@ import { AppRegistry,View, Picker, Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 import _ from 'lodash'
 
-import { actionCreators } from './panchosListRedux'
-import List from './List'
-import Input from './Input'
-import Title from './Title'
+import List from '../base-components/List'
+import Input from '../base-components/Input'
+import Title from '../base-components/Title'
 import MenuPopup from './MenuPopup'
 import Profile from './Profile'
 

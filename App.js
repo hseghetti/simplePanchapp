@@ -1,23 +1,13 @@
 import React from 'react';
 import { AppRegistry, View, StyleSheet, StatusBar } from 'react-native'
-import { createStore } from 'redux'
 import * as firebase from 'firebase'
-import { reducer } from './panchosListRedux'
-import Container from './Container'
-import LoginForm from './LoginForm'
+import Container from './main-components/Container'
+import LoginForm from './main-components/LoginForm'
+import firebaseData from './app-config/firebase-data'
 import _ from 'lodash'
 
-const store = createStore(reducer)
-
 // Initialize Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyDtz51NeQQVzOHR-MqKfV4HCsZxURbNS-M",
-    authDomain: "panchos-4ad41.firebaseapp.com",
-    databaseURL: "https://panchos-4ad41.firebaseio.com",
-    projectId: "panchos-4ad41",
-    storageBucket: "panchos-4ad41.appspot.com",
-    messagingSenderId: "357706798263"
-  };
+const firebaseConfig = firebaseData;
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
@@ -55,8 +45,7 @@ export default class App extends React.Component {
 
     renderAppContainer = () => {
         return (
-            <Container 
-                store={store} 
+            <Container  
                 panchos={this.getPanchos()}
                 users={this.state.users}
                 userData={this.state.userData}

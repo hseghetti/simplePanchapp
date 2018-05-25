@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, Button } from 'react-native';
 import firebase from 'firebase';
-import TitledInput from './TitledInput';
-import Spinner from './Spinner';
+import TitledInput from '../base-components/TitledInput';
+import Spinner from '../base-components/Spinner';
 
 class LoginForm extends Component {
     state = { email: '', password: '', error: '', loading: false };
