@@ -73,12 +73,9 @@ export default class App extends React.Component {
                 })
             })
 
-            // this setTimeout is needed because in prod there is a issue trying to get the panchos
-            setTimeout(function () {
-                this.setState({
-                    panchos: items
-                })
-            }.bind(this), 0)
+            this.setState({
+                panchos: items
+            })
         })
     }
 
