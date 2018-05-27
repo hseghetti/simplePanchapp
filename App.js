@@ -3,11 +3,11 @@ import { AppRegistry, View, StyleSheet, StatusBar } from 'react-native'
 import * as firebase from 'firebase'
 import Container from './main-components/Container'
 import LoginForm from './main-components/LoginForm'
-import firebaseData from './app-config/firebase-data'
+import firebaseConnectionHandler from './app-config/firebase-connection-handler'
 import _ from 'lodash'
 
 // Initialize Firebase
-const firebaseConfig = firebaseData;
+const firebaseConfig = firebaseConnectionHandler;
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {

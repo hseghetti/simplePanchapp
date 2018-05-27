@@ -1,8 +1,1 @@
-export default {
-    apiKey: "AIzaSyDtz51NeQQVzOHR-MqKfV4HCsZxURbNS-M",
-    authDomain: "panchos-4ad41.firebaseapp.com",
-    databaseURL: "https://panchos-4ad41.firebaseio.com",
-    projectId: "panchos-4ad41",
-    storageBucket: "panchos-4ad41.appspot.com",
-    messagingSenderId: "357706798263"
-};
+export default 'HU4IHh04ERZMX1EnJRMPJwowGxRQQigJOD8iCTsnPEg+FycPOEA7Nxw0HSY0Dic9WT5WQ0wEBhIELQEZEh0BTF9RFg0HDRwcB0JaBBdSXUcIHQERDQ8WFgccGUAXHBlNQkcXBxgIDBUAETo8KVFcTgEaAAMHVUFKAwcCCgYbAFlbDwFHV0IPBwYWFg4dABoJQgoBGVFYTR4XHAwJCho9F1ZVTBUSCA8BAQdeQA4KUUJEQEsdABwGDgkAMRMPAgsAUU5NHgQdBQQGHVlHFQtaVF0HHBkdBBwAQQ0KHkRASwMRAAcOCQwdAT8MABAWBiYKR0lEX1xZQ0NCWFddQVBfSxM=';
